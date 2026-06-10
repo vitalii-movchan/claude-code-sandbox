@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="only dark">
+<title>tres in linea · крестики-нолики</title>
+<style>
+  :root {
+    --ink-deep:   #15100b;   /* почти чёрный кофейный фон */
+    --ink:        #1f1812;
+    --panel:      #241c14;   /* пергаментно-тёмная панель */
+    --paper:      #d8c9a8;   /* состаренная бумага — основной текст */
+    --paper-dim:  #9a8a6c;   /* приглушённый текст */
+    --gold:       #b08d57;   /* старое золото / охра */
+    --gold-soft:  rgba(176, 141, 87, 0.35);
+    --x:          #a8463a;   /* приглушённый бордо для × */
+    --o:          #5e8a6f;   /* тёмный изумруд для ○ */
+    --line:       rgba(176, 141, 87, 0.28);
+    --win:        #e8c87a;   /* тёплое золото подсветки */
+  }
+
+  * { box-sizing: border-box; }
+
+  html, body {
+    margin: 0;
+    height: 100%;
+    color: var(--paper);
+    font-family: Georgia, "Times New Roman", "Palatino Linotype", serif;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  body {
+    min-height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 28px;
+    /* старая бумага + виньетка по краям */
+    background:
+      radial-gradient(ellipse at 50% 35%, #2a2117 0%, var(--ink) 55%, var(--ink-deep) 100%),
+      var(--ink-deep);
+    position: relative;
+  }
+
+  /* лёгкое зерно/виньетка поверх всего */
+  body::after {
+    content: "";
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    background: radial-gradient(ellipse at center, transparent 55%, rgba(0,0,0,0.55) 100%);
+  }
+
+  .panel {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    max-width: 420px;
+    padding: 38px 34px 32px;
+    text-align: center;
+    background:
+      linear-gradient(180deg, rgba(176,141,87,0.05), rgba(0,0,0,0.15)),
+      var(--panel);
+    border: 1px solid var(--gold-soft);
+    /* двойная рамка-«паспарту» */
+    box-shadow:
+      0 0 0 1px rgba(0,0,0,0.4),
+      0 0 0 6px var(--panel),
+      0 0 0 7px var(--gold-soft),
+      0 22px 60px rgba(0,0,0,0.55);
+  }
+
+  .title {
+    margin: 0;
+    font-size: 30px;
+    font-weight: 400;
+    letter-spacing: 0.32em;
+    text-transform: uppercase;
+    color: var(--gold);
+    text-shadow: 0 1px 0 rgba(0,0,0,0.5);
+  }
+
+  .subtitle {
+    margin: 8px 0 2px;
+    font-style: italic;
+    font-size: 15px;
+    color: var(--paper-dim);
+    letter-spacing: 0.04em;
+  }
+
+  /* декоративный разделитель */
+  .rule {
+    width: 64px;
+    height: 1px;
+    margin: 18px auto 22px;
+    background: linear-gradient(90deg, transparent, var(--gold), transparent);
+  }
+
+  .status {
+    min-height: 22px;
+    margin-bottom: 22px;
+    font-size: 15px;
+    letter-spacing: 0.05em;
+    color: var(--paper);
+  }
+  .status.win  { color: var(--win); }
+  .status.lose { color: var(--x); }
+  .status.draw { color: var(--paper-dim); }
+
+  .board {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0;
+    width: 280px;
+    margin: 0 auto 26px;
+    background: var(--line);          /* линии сетки сквозь зазоры */
+    border: 1px solid var(--gold-soft);
+  }
+
+  .cell {
+    aspect-ratio: 1 / 1;
+    margin: 1px;                      /* зазор образует «золотые» линии */
+    border: 0;
+    cursor: pointer;
+    font-family: Georgia, serif;
+    font-size: 52px;
+    line-height: 1;
+    color: var(--paper);
+    background: rgba(20, 15, 10, 0.6);
+    transition: background 160ms ease, box-shadow 160ms ease, color 160ms ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .cell:hover:not(:disabled) {
+    background: rgba(176, 141, 87, 0.10);
+    box-shadow: inset 0 0 24px rgba(176, 141, 87, 0.18);
+  }
+  .cell:disabled { cursor: default; }
+
+  .cell.x { color: var(--x); }
+  .cell.o { color: var(--o); }
+
+  .cell.win {
+    color: var(--win);
+    background: rgba(232, 200, 122, 0.12);
+    box-shadow: inset 0 0 28px rgba(232, 200, 122, 0.35);
+    text-shadow: 0 0 14px rgba(232, 200, 122, 0.6);
+  }
+
+  .restart {
+    appearance: none;
+    cursor: pointer;
+    padding: 11px 26px;
+    font-family: Georgia, serif;
+    font-size: 13px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--gold);
+    background: transparent;
+    border: 1px solid var(--gold-soft);
+    transition: color 160ms ease, border-color 160ms ease, background 160ms ease;
+  }
+  .restart:hover {
+    color: var(--ink);
+    border-color: var(--gold);
+    background: var(--gold);
+  }
+
+  .footer {
+    margin-top: 22px;
+    font-size: 11px;
+    font-style: italic;
+    letter-spacing: 0.05em;
+    color: var(--paper-dim);
+    opacity: 0.7;
+  }
+</style>
+</head>
+<body>
+  <main class="panel">
+    <h1 class="title">tres in linea</h1>
+    <p class="subtitle">«три в ряд» — старинная забава учёных мужей</p>
+    <div class="rule" aria-hidden="true"></div>
+
+    <div class="status" id="status">Ваш ход — вы за ×</div>
+
+    <div class="board" id="board" aria-label="Игровое поле">
+      <!-- 9 ячеек генерируются скриптом -->
+    </div>
+
+    <button class="restart" id="restart">начать заново</button>
+
+    <p class="footer">Magister ludi непобедим — лучшее, на что можно надеяться, — ничья.</p>
+  </main>
+
+<script>
+(function () {
+  "use strict";
+
+  var HUMAN = "×";  // ×
+  var AI    = "○";  // ○
+
+  var WIN_LINES = [
+    [0,1,2],[3,4,5],[6,7,8], // ряды
+    [0,3,6],[1,4,7],[2,5,8], // столбцы
+    [0,4,8],[2,4,6]          // диагонали
+  ];
+
+  var board = ["","","","","","","","",""];
+  var gameOver = false;
+
+  var boardEl   = document.getElementById("board");
+  var statusEl  = document.getElementById("status");
+  var restartEl = document.getElementById("restart");
+  var cells = [];
+
+  // создаём ячейки
+  for (var i = 0; i < 9; i++) {
+    var btn = document.createElement("button");
+    btn.className = "cell";
+    btn.dataset.idx = i;
+    btn.addEventListener("click", onCellClick);
+    boardEl.appendChild(btn);
+    cells.push(btn);
+  }
+  restartEl.addEventListener("click", restart);
+
+  function onCellClick(e) {
+    var idx = Number(e.currentTarget.dataset.idx);
+    if (gameOver || board[idx] !== "") return;
+
+    place(idx, HUMAN);
+    if (checkEnd()) return;
+
+    // ход ИИ с лёгкой задержкой для плавности «размышления»
+    setStatus("Размышляет…", "");
+    lockBoard(true);
+    setTimeout(function () {
+      var move = bestMove(board);
+      if (move !== -1) place(move, AI);
+      lockBoard(false);
+      checkEnd();
+    }, 420);
+  }
+
+  // ставим символ и отрисовываем
+  function place(idx, player) {
+    board[idx] = player;
+    var cell = cells[idx];
+    cell.textContent = player;
+    cell.classList.add(player === HUMAN ? "x" : "o");
+    cell.disabled = true;
+  }
+
+  // проверка состояния игры; возвращает true, если игра окончена
+  function checkEnd() {
+    var result = checkWinner(board);
+    if (result) {
+      gameOver = true;
+      highlight(result.line);
+      if (result.winner === HUMAN) {
+        setStatus("Вы выиграли — небывалое дело", "win");
+      } else {
+        setStatus("Победил Magister ludi", "lose");
+      }
+      lockBoard(true);
+      return true;
+    }
+    if (isFull(board)) {
+      gameOver = true;
+      setStatus("Ничья — достойный исход", "draw");
+      return true;
+    }
+    if (!gameOver) setStatus("Ваш ход — вы за ×", "");
+    return false;
+  }
+
+  // возвращает {winner, line} или null
+  function checkWinner(b) {
+    for (var i = 0; i < WIN_LINES.length; i++) {
+      var l = WIN_LINES[i];
+      if (b[l[0]] && b[l[0]] === b[l[1]] && b[l[1]] === b[l[2]]) {
+        return { winner: b[l[0]], line: l };
+      }
+    }
+    return null;
+  }
+
+  function isFull(b) {
+    for (var i = 0; i < b.length; i++) if (b[i] === "") return false;
+    return true;
+  }
+
+  function emptyCells(b) {
+    var res = [];
+    for (var i = 0; i < b.length; i++) if (b[i] === "") res.push(i);
+    return res;
+  }
+
+  // ── Непобедимый бот: minimax с полным перебором ──
+  // Оценка: победа ИИ = 10 - глубина (выигрываем быстрее),
+  //         поражение  = глубина - 10 (проигрываем медленнее),
+  //         ничья      = 0.
+  function bestMove(b) {
+    var best = -Infinity;
+    var move = -1;
+    var empties = emptyCells(b);
+    for (var i = 0; i < empties.length; i++) {
+      var idx = empties[i];
+      b[idx] = AI;
+      var score = minimax(b, 0, false);
+      b[idx] = "";
+      if (score > best) {
+        best = score;
+        move = idx;
+      }
+    }
+    return move;
+  }
+
+  function minimax(b, depth, isMaximizing) {
+    var result = checkWinner(b);
+    if (result) {
+      return result.winner === AI ? (10 - depth) : (depth - 10);
+    }
+    if (isFull(b)) return 0;
+
+    var empties = emptyCells(b);
+    var i, idx, score;
+
+    if (isMaximizing) {            // ход ИИ — максимизируем
+      var best = -Infinity;
+      for (i = 0; i < empties.length; i++) {
+        idx = empties[i];
+        b[idx] = AI;
+        score = minimax(b, depth + 1, false);
+        b[idx] = "";
+        if (score > best) best = score;
+      }
+      return best;
+    } else {                       // ход человека — минимизируем
+      var worst = Infinity;
+      for (i = 0; i < empties.length; i++) {
+        idx = empties[i];
+        b[idx] = HUMAN;
+        score = minimax(b, depth + 1, true);
+        b[idx] = "";
+        if (score < worst) worst = score;
+      }
+      return worst;
+    }
+  }
+
+  function highlight(line) {
+    for (var i = 0; i < line.length; i++) cells[line[i]].classList.add("win");
+  }
+
+  function lockBoard(locked) {
+    for (var i = 0; i < cells.length; i++) {
+      if (board[i] === "") cells[i].disabled = locked;
+    }
+  }
+
+  function setStatus(text, cls) {
+    statusEl.textContent = text;
+    statusEl.className = "status" + (cls ? " " + cls : "");
+  }
+
+  function restart() {
+    board = ["","","","","","","","",""];
+    gameOver = false;
+    for (var i = 0; i < cells.length; i++) {
+      cells[i].textContent = "";
+      cells[i].className = "cell";
+      cells[i].disabled = false;
+    }
+    setStatus("Ваш ход — вы за ×", "");
+  }
+})();
+</script>
+</body>
+</html>

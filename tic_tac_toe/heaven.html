@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- страница задумана только в светлой гамме; просим браузер/Dark Reader не инвертировать цвета -->
+<meta name="color-scheme" content="only light">
+<title>tic · tac · toe</title>
+<style>
+  :root {
+    --sky-top:    #2f7fd6;   /* насыщенное синее небо вверху */
+    --sky-mid:    #4d9ae0;
+    --sky-bottom: #8fc4ef;   /* у горизонта — светлее */
+    --ink:        #14304a;   /* тёмно-синий текст */
+    --x:          #1f4a73;
+    --o:          #5b9bd6;
+    --line:       rgba(90, 145, 200, 0.30);
+    --muted:      #e8f2fc;
+    --win-bg:     #eaf4ff;
+  }
+
+  * { box-sizing: border-box; }
+
+  html, body {
+    margin: 0;
+    height: 100%;
+    color: var(--ink);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    padding: 32px 16px;
+    overflow: hidden;
+    /* синее небо: насыщеннее вверху → светлее к горизонту */
+    background: linear-gradient(180deg, var(--sky-top) 0%, var(--sky-mid) 50%, var(--sky-bottom) 100%);
+    background-attachment: fixed;
+  }
+
+  /* слой с плывущими облаками — позади всего контента */
+  .sky {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    overflow: hidden;
+  }
+
+  .cloud {
+    position: absolute;
+    border-radius: 100px;
+    background-color: #ffffff;
+    opacity: 0.95;
+    /* синяя подсветка/свечение вокруг облака */
+    box-shadow:
+      0 0 40px 12px rgba(120, 175, 235, 0.55),
+      0 0 80px 30px rgba(90, 150, 220, 0.35);
+    animation: drift linear infinite;
+  }
+  /* «комочки» сверху, чтобы форма была облачной, а не плоской */
+  .cloud::before,
+  .cloud::after {
+    content: "";
+    position: absolute;
+    background-color: #ffffff;
+    border-radius: 50%;
+  }
+  .cloud::before {
+    width: 55%;
+    height: 130%;
+    top: -55%;
+    left: 12%;
+  }
+  .cloud::after {
+    width: 45%;
+    height: 115%;
+    top: -40%;
+    right: 14%;
+  }
+
+  .cloud.c1 { width: 180px; height: 64px; top: 14%; left: -240px;  animation-duration: 46s; }
+  .cloud.c2 { width: 120px; height: 46px; top: 36%; left: -200px;  animation-duration: 62s; animation-delay: -18s; }
+  .cloud.c3 { width: 240px; height: 84px; top: 62%; left: -320px;  animation-duration: 54s; animation-delay: -30s; }
+  .cloud.c4 { width: 140px; height: 52px; top: 80%; left: -220px;  animation-duration: 70s; animation-delay: -10s; }
+  .cloud.c5 { width: 100px; height: 40px; top: 6%;  left: -180px;  animation-duration: 58s; animation-delay: -44s; }
+
+  @keyframes drift {
+    from { transform: translateX(0); }
+    to   { transform: translateX(calc(100vw + 360px)); }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .cloud { animation: none; }
+  }
+
+  .panel {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    max-width: 380px;
+    text-align: center;
+  }
+
+  .title {
+    margin: 0 0 4px;
+    font-size: 20px;
+    font-weight: 300;
+    letter-spacing: 8px;
+    color: var(--ink);
+    text-transform: lowercase;
+  }
+
+  .subtitle {
+    margin: 0 0 28px;
+    font-size: 12px;
+    font-weight: 300;
+    letter-spacing: 3px;
+    color: var(--muted);
+    text-transform: uppercase;
+  }
+
+  .status {
+    min-height: 1.4em;
+    margin: 0 0 22px;
+    font-size: 14px;
+    font-weight: 400;
+    letter-spacing: 1px;
+    color: var(--muted);
+    transition: color 0.3s ease;
+  }
+  .status.win  { color: var(--ink); }
+  .status.lose { color: var(--ink); }
+  .status.draw { color: var(--muted); }
+
+  .board {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1px;
+    background: var(--line);
+    border: 1px solid rgba(255, 255, 255, 0.7);
+    border-radius: 14px;
+    overflow: hidden;
+    /* мягкая стеклянная доска поверх неба */
+    box-shadow:
+      0 10px 40px rgba(80, 130, 185, 0.25),
+      0 2px 8px rgba(80, 130, 185, 0.12);
+    aspect-ratio: 1 / 1;
+  }
+
+  .cell {
+    border: none;
+    background: rgba(255, 255, 255, 0.78);
+    color: var(--x);
+    font-family: inherit;
+    font-size: clamp(40px, 16vw, 68px);
+    font-weight: 200;
+    line-height: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background 0.18s ease, color 0.18s ease;
+    user-select: none;
+    aspect-ratio: 1 / 1;
+  }
+  .cell:hover:not(:disabled) { background: rgba(255, 255, 255, 0.95); }
+  .cell:disabled { cursor: default; }
+
+  .cell.x { color: var(--x); }
+  .cell.o { color: var(--o); }
+
+  .cell.win {
+    background: var(--win-bg);
+    animation: glow 1.6s ease-in-out infinite alternate;
+  }
+  @keyframes glow {
+    from { background: rgba(255, 255, 255, 0.78); }
+    to   { background: var(--win-bg); }
+  }
+
+  .restart {
+    margin-top: 24px;
+    background: rgba(255, 255, 255, 0.5);
+    border: 1px solid rgba(255, 255, 255, 0.8);
+    color: var(--ink);
+    font-family: inherit;
+    font-size: 12px;
+    font-weight: 400;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    padding: 11px 26px;
+    cursor: pointer;
+    border-radius: 999px;
+    transition: border-color 0.2s ease, color 0.2s ease, background 0.2s ease;
+  }
+  .restart:hover {
+    border-color: #ffffff;
+    color: var(--ink);
+    background: rgba(255, 255, 255, 0.85);
+  }
+</style>
+</head>
+<body>
+  <div class="sky" aria-hidden="true">
+    <div class="cloud c1"></div>
+    <div class="cloud c2"></div>
+    <div class="cloud c3"></div>
+    <div class="cloud c4"></div>
+    <div class="cloud c5"></div>
+  </div>
+
+  <main class="panel">
+    <h1 class="title">tic · tac · toe</h1>
+    <p class="subtitle">в раю</p>
+
+    <div class="status" id="status">Ваш ход — вы за ×</div>
+
+    <div class="board" id="board" aria-label="Игровое поле">
+      <!-- 9 ячеек генерируются скриптом -->
+    </div>
+
+    <button class="restart" id="restart">начать заново</button>
+  </main>
+
+<script>
+(function () {
+  "use strict";
+
+  var HUMAN = "×";
+  var AI = "○";
+
+  var WIN_LINES = [
+    [0,1,2],[3,4,5],[6,7,8], // ряды
+    [0,3,6],[1,4,7],[2,5,8], // столбцы
+    [0,4,8],[2,4,6]          // диагонали
+  ];
+
+  var board = ["","","","","","","","",""];
+  var gameOver = false;
+
+  var boardEl = document.getElementById("board");
+  var statusEl = document.getElementById("status");
+  var restartEl = document.getElementById("restart");
+  var cells = [];
+
+  // создаём ячейки
+  for (var i = 0; i < 9; i++) {
+    var btn = document.createElement("button");
+    btn.className = "cell";
+    btn.dataset.idx = i;
+    btn.addEventListener("click", onCellClick);
+    boardEl.appendChild(btn);
+    cells.push(btn);
+  }
+  restartEl.addEventListener("click", restart);
+
+  function onCellClick(e) {
+    var idx = Number(e.currentTarget.dataset.idx);
+    if (gameOver || board[idx] !== "") return;
+
+    place(idx, HUMAN);
+    if (checkEnd()) return;
+
+    // ход ИИ с лёгкой задержкой для плавности
+    setStatus("Размышляет…", "");
+    lockBoard(true);
+    setTimeout(function () {
+      var move = aiMove();
+      if (move !== -1) place(move, AI);
+      lockBoard(false);
+      checkEnd();
+    }, 420);
+  }
+
+  // ставим символ и отрисовываем
+  function place(idx, player) {
+    board[idx] = player;
+    var cell = cells[idx];
+    cell.textContent = player;
+    cell.classList.add(player === HUMAN ? "x" : "o");
+    cell.disabled = true;
+  }
+
+  // проверка состояния игры; возвращает true, если игра окончена
+  function checkEnd() {
+    var result = checkWinner(board);
+    if (result) {
+      gameOver = true;
+      highlight(result.line);
+      if (result.winner === HUMAN) {
+        setStatus("Вы выиграли", "win");
+      } else {
+        setStatus("Победил компьютер", "lose");
+      }
+      lockBoard(true);
+      return true;
+    }
+    if (isFull(board)) {
+      gameOver = true;
+      setStatus("Ничья", "draw");
+      return true;
+    }
+    if (!gameOver) setStatus("Ваш ход — вы за ×", "");
+    return false;
+  }
+
+  // возвращает {winner, line} или null
+  function checkWinner(b) {
+    for (var i = 0; i < WIN_LINES.length; i++) {
+      var l = WIN_LINES[i];
+      if (b[l[0]] && b[l[0]] === b[l[1]] && b[l[1]] === b[l[2]]) {
+        return { winner: b[l[0]], line: l };
+      }
+    }
+    return null;
+  }
+
+  function isFull(b) {
+    for (var i = 0; i < b.length; i++) if (b[i] === "") return false;
+    return true;
+  }
+
+  // ищет ячейку, завершающую линию для игрока player; иначе -1
+  function findWinningMove(b, player) {
+    for (var i = 0; i < WIN_LINES.length; i++) {
+      var l = WIN_LINES[i];
+      var vals = [b[l[0]], b[l[1]], b[l[2]]];
+      var count = 0, empty = -1;
+      for (var j = 0; j < 3; j++) {
+        if (vals[j] === player) count++;
+        else if (vals[j] === "") empty = l[j];
+      }
+      if (count === 2 && empty !== -1) return empty;
+    }
+    return -1;
+  }
+
+  function emptyCells(b) {
+    var res = [];
+    for (var i = 0; i < b.length; i++) if (b[i] === "") res.push(i);
+    return res;
+  }
+
+  function randomEmpty(b) {
+    var e = emptyCells(b);
+    if (!e.length) return -1;
+    return e[Math.floor(Math.random() * e.length)];
+  }
+
+  // «простой» бот: иногда выигрывает, иногда блокирует, иногда промахивается
+  function aiMove() {
+    // 1) свой выигрыш — берём в ~70% случаев
+    var winMove = findWinningMove(board, AI);
+    if (winMove !== -1 && Math.random() < 0.7) return winMove;
+
+    // 2) блок угрозы игрока — но ~30% времени «промахиваемся»
+    var blockMove = findWinningMove(board, HUMAN);
+    if (blockMove !== -1 && Math.random() < 0.7) return blockMove;
+
+    // 3) случайный ход
+    return randomEmpty(board);
+  }
+
+  function highlight(line) {
+    for (var i = 0; i < line.length; i++) cells[line[i]].classList.add("win");
+  }
+
+  function lockBoard(locked) {
+    for (var i = 0; i < cells.length; i++) {
+      if (board[i] === "") cells[i].disabled = locked;
+    }
+  }
+
+  function setStatus(text, cls) {
+    statusEl.textContent = text;
+    statusEl.className = "status" + (cls ? " " + cls : "");
+  }
+
+  function restart() {
+    board = ["","","","","","","","",""];
+    gameOver = false;
+    for (var i = 0; i < cells.length; i++) {
+      cells[i].textContent = "";
+      cells[i].className = "cell";
+      cells[i].disabled = false;
+    }
+    setStatus("Ваш ход — вы за ×", "");
+  }
+})();
+</script>
+</body>
+</html>
