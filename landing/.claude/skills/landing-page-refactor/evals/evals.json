@@ -1,0 +1,29 @@
+{
+  "skill_name": "landing-page-refactor",
+  "evals": [
+    {
+      "id": 0,
+      "name": "basic-code-cleanup-pet-care",
+      "prompt": "Отрефактори и почисти код лендинга pet_care",
+      "expected_output": "Аудит по 4 осям + чистка кода pet_care: .service-card получает display:flex; устранена двойная подписка listener на carousel-dots в resize; :root сгруппирован. Контент (data.js тексты) НЕ тронут. Вид/поведение не меняются. Финальная верификация (node --check + браузер/скриншоты). Краткий отчёт с явным списком 'не менял с причиной'.",
+      "files": [],
+      "assertions": []
+    },
+    {
+      "id": 1,
+      "name": "full-cycle-with-content-car-service",
+      "prompt": "Почисти код лендинга car_service, и контент тоже поправь",
+      "expected_output": "Полный цикл: чистка кода (DRY render(), onerror, :root) + починка контента: опечатки REWIEV→REVIEWS, sayin→saying; дубли в массиве why. Где правка контента неоднозначна — задаёт уточняющий вопрос вместо отсебятины. Верификация в браузере со скриншотами секции reviews.",
+      "files": [],
+      "assertions": []
+    },
+    {
+      "id": 2,
+      "name": "no-argument-asks-which",
+      "prompt": "Отрефактори лендинг",
+      "expected_output": "Скилл НЕ угадывает и не чистит наугад/все сразу. Показывает список папок из pages/ (ls pages/) и спрашивает, какой именно лендинг рефакторить.",
+      "files": [],
+      "assertions": []
+    }
+  ]
+}
