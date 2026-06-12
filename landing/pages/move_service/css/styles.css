@@ -1,18 +1,23 @@
 /* ===== Mover — palette & layout from the reference ===== */
 :root {
-  --color-accent: #1e73e6;          /* primary blue */
-  --color-accent-dark: #1660c4;
-  --color-red: #e23b3b;             /* "20" + circular icons */
-  --color-yellow: #f5a623;
-  --color-text: #5a6270;
-  --color-heading: #2b313a;
-  --color-bg: #ffffff;
-  --color-band: #f4f6f9;
-  --color-line: #e4e8ee;
-  --color-dark: #232830;
-  --color-darker: #1b2027;
+  /* Typography */
   --font: "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+
+  /* Layout */
   --maxw: 1100px;
+
+  /* Colors */
+  --color-accent: #1e73e6;          /* primary blue */
+  --color-accent-dark: #1660c4;     /* button hover / links */
+  --color-red: #e23b3b;             /* "20" + circular icons */
+  --color-yellow: #f5a623;          /* yellow stat card */
+  --color-text: #5a6270;            /* body text */
+  --color-heading: #2b313a;         /* headings */
+  --color-bg: #ffffff;              /* page background */
+  --color-band: #f4f6f9;            /* light section bands */
+  --color-line: #e4e8ee;            /* borders / hairlines */
+  --color-dark: #232830;            /* dark surfaces (quote, footer) */
+  --color-darker: #1b2027;          /* darkest surfaces (top bar, CTA) */
 }
 
 * { box-sizing: border-box; }
@@ -29,6 +34,34 @@ a { color: inherit; text-decoration: none; }
 img { max-width: 100%; display: block; }
 
 .container { max-width: var(--maxw); margin: 0 auto; padding: 0 24px; }
+
+/* List-semantics reset: these grids/rows are <ul> for semantics; strip the
+   browser's default list chrome so the existing grid/flex layout is unchanged.
+   Padding is left to each container's own rule (.container or per-grid padding)
+   so horizontal gutters are preserved. */
+.exp-features-grid,
+.services-grid,
+.about-cols,
+.testimonials-grid,
+.clients-row,
+.team-grid,
+.blog-grid {
+  list-style: none;
+  margin: 0;
+}
+.services-grid,
+.about-cols,
+.team-grid,
+.blog-grid {
+  padding: 0;
+}
+.exp-features-grid > li::marker,
+.services-grid > li::marker,
+.about-cols > li::marker,
+.testimonials-grid > li::marker,
+.clients-row > li::marker,
+.team-grid > li::marker,
+.blog-grid > li::marker { content: none; }
 
 /* ===== Shared bits ===== */
 .section { padding: 72px 0; }
@@ -155,14 +188,21 @@ img { max-width: 100%; display: block; }
 .service-card { border: 1px solid var(--color-line); background: #fff; }
 /* Placeholders shown while img/*.jpg are absent. main.js applies the real
    background-image only after the file loads (data-bg + preload), so the glyph
-   never sits on top of a loaded photo. */
-.service-img, .member-img, .post-img { display: flex; align-items: center; justify-content: center; }
-.service-img::before, .member-img::before, .post-img::before { font-size: 48px; opacity: 0.3; }
-.service-img.has-img::before, .member-img.has-img::before, .post-img.has-img::before { content: none; }
+   never sits on top of a loaded photo. Shared look lives in .img-placeholder;
+   each type only overrides height, ::before glyph and (rarely) the base color. */
+.img-placeholder {
+  display: flex; align-items: center; justify-content: center;
+  background-size: cover;
+  background-position: center;
+  background-color: var(--color-band);
+  background-image: linear-gradient(135deg, var(--color-band) 0%, var(--color-line) 100%);
+}
+.img-placeholder::before { font-size: 48px; opacity: 0.3; }
+.img-placeholder.has-img::before { content: none; }
 .service-img::before { content: "\1F4E6"; } /* 📦 */
 .member-img::before { content: "\1F464"; }  /* 👤 */
 .post-img::before { content: "\1F4F0"; }    /* 📰 */
-.service-img { height: 140px; background-size: cover; background-position: center; background-color: var(--color-band); background-image: linear-gradient(135deg, var(--color-band) 0%, var(--color-line) 100%); }
+.service-img { height: 140px; }
 .service-body { padding: 20px; }
 .service-body h3 { margin: 0 0 10px; font-size: 14px; letter-spacing: .5px; text-transform: uppercase; color: var(--color-heading); }
 .service-body p { margin: 0 0 16px; font-size: 13px; }
@@ -225,7 +265,7 @@ img { max-width: 100%; display: block; }
 .team { background: var(--color-band); }
 .team-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; }
 .member { background: #fff; border: 1px solid var(--color-line); text-align: center; }
-.member-img { height: 200px; background-size: cover; background-position: center top; background-color: var(--color-line); background-image: linear-gradient(135deg, var(--color-band) 0%, var(--color-line) 100%); }
+.member-img { height: 200px; background-position: center top; background-color: var(--color-line); }
 .member-body { padding: 18px; }
 .member-body h3 { margin: 0; font-size: 15px; color: var(--color-heading); text-transform: uppercase; letter-spacing: .5px; }
 .member-body p { margin: 4px 0 12px; font-size: 13px; }
@@ -237,7 +277,7 @@ img { max-width: 100%; display: block; }
 .blog { background: var(--color-bg); }
 .blog-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 26px; }
 .post { border: 1px solid var(--color-line); background: #fff; }
-.post-img { height: 180px; background-size: cover; background-position: center; background-color: var(--color-band); background-image: linear-gradient(135deg, var(--color-band) 0%, var(--color-line) 100%); }
+.post-img { height: 180px; }
 .post-body { padding: 20px; }
 .post-meta { font-size: 12px; color: var(--color-accent); text-transform: uppercase; letter-spacing: .5px; }
 .post-body h3 { margin: 10px 0 14px; font-size: 16px; color: var(--color-heading); }

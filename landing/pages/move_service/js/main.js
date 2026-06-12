@@ -14,31 +14,31 @@
 
   /* Top bar info */
   render("topbar-list", data.topbar, (i) => `
-    <li><span class="ti-icon">${ICONS[i.icon] || ""}</span>${escapeHtml(i.text)}</li>`);
+    <li><span class="ti-icon" aria-hidden="true">${ICONS[i.icon] || ""}</span>${escapeHtml(i.text)}</li>`);
 
   /* Top bar social */
   render("topsocial-list", data.social, socialLink);
 
   /* Experience features */
   render("expfeatures-list", data.expFeatures, (f) => `
-    <div class="exp-feature">
-      <span class="exp-feature-icon">&#10003;</span>
+    <li class="exp-feature">
+      <span class="exp-feature-icon" aria-hidden="true">&#10003;</span>
       <div>
         <h4>${escapeHtml(f.title)}</h4>
         <p>${escapeHtml(f.text)}</p>
       </div>
-    </div>`);
+    </li>`);
 
   /* Services */
   render("services-list", data.services, (s) => `
-    <article class="service-card">
-      <div class="service-img" data-bg="${encodeURI(s.img)}"></div>
+    <li class="service-card">
+      <div class="service-img img-placeholder" data-bg="${encodeURI(s.img)}" role="img" aria-label="${escapeHtml(s.title)}"></div>
       <div class="service-body">
         <h3>${escapeHtml(s.title)}</h3>
         <p>${escapeHtml(s.text)}</p>
         <a href="#quote" class="btn btn-accent btn-sm">Read More</a>
       </div>
-    </article>`);
+    </li>`);
 
   /* About stat cards */
   render("stats-list", data.stats, (s) => `
@@ -49,52 +49,54 @@
 
   /* About / Mission columns */
   render("about-list", data.about, (a) => `
-    <div class="about-col">
+    <li class="about-col">
       <h3>${escapeHtml(a.title)}</h3>
       <span class="title-rule small left"></span>
       <p>${escapeHtml(a.text)}</p>
       <a href="#quote" class="about-more">Read More &rsaquo;</a>
-    </div>`);
+    </li>`);
 
   /* Testimonials */
   render("testimonials-list", data.testimonials, (t) => `
-    <blockquote class="testimonial">
-      <p>&ldquo;${escapeHtml(t.text)}&rdquo;</p>
-      <footer><span class="t-author">${escapeHtml(t.author)}</span><span class="t-role">${escapeHtml(t.role)}</span></footer>
-    </blockquote>`);
+    <li class="testimonial-item">
+      <blockquote class="testimonial">
+        <p>&ldquo;${escapeHtml(t.text)}&rdquo;</p>
+        <footer><span class="t-author">${escapeHtml(t.author)}</span><span class="t-role">${escapeHtml(t.role)}</span></footer>
+      </blockquote>
+    </li>`);
 
   /* Client logos */
   render("clients-list", data.clients, (c) => `
-    <span class="client">${escapeHtml(c)}</span>`);
+    <li class="client">${escapeHtml(c)}</li>`);
 
   /* Team */
   render("team-list", data.team, (m) => `
-    <article class="member">
-      <div class="member-img" data-bg="${encodeURI(m.img)}"></div>
+    <li class="member">
+      <div class="member-img img-placeholder" data-bg="${encodeURI(m.img)}" role="img" aria-label="${escapeHtml(m.name)}"></div>
       <div class="member-body">
         <h3>${escapeHtml(m.name)}</h3>
         <p>${escapeHtml(m.role)}</p>
         <div class="member-social">${(data.social || []).map(socialLink).join("")}</div>
       </div>
-    </article>`);
+    </li>`);
 
   /* Blog */
   render("blog-list", data.blog, (b) => `
-    <article class="post">
-      <div class="post-img" data-bg="${encodeURI(b.img)}"></div>
+    <li class="post">
+      <div class="post-img img-placeholder" data-bg="${encodeURI(b.img)}" role="img" aria-label="${escapeHtml(b.title)}"></div>
       <div class="post-body">
         <span class="post-meta">${escapeHtml(b.date)} &middot; by ${escapeHtml(b.author)}</span>
         <h3>${escapeHtml(b.title)}</h3>
         <a href="#blog" class="post-more">Continue Reading &rsaquo;</a>
       </div>
-    </article>`);
+    </li>`);
 
   /* Footer */
   render("footsocial-list", data.social, socialLink);
   render("footlinks1-list", data.footLinks1, (l) => `<li><a href="#top">${escapeHtml(l)}</a></li>`);
   render("footlinks2-list", data.footLinks2, (l) => `<li><a href="#services">${escapeHtml(l)}</a></li>`);
   render("footcontact-list", data.footContact, (c) => `
-    <li><span class="fc-icon">${ICONS[c.icon] || ""}</span>${escapeHtml(c.text)}</li>`);
+    <li><span class="fc-icon" aria-hidden="true">${ICONS[c.icon] || ""}</span>${escapeHtml(c.text)}</li>`);
 
   /* ---- helpers ---- */
 
@@ -119,8 +121,11 @@
       if (!url) return;
       const probe = new Image();
       probe.onload = () => {
-        el.style.backgroundImage = "url('" + url + "')";
+        el.style.backgroundImage = 'url("' + url + '")';
         el.classList.add("has-img");
+      };
+      probe.onerror = () => {
+        console.warn("Background image failed to load: " + url);
       };
       probe.src = url;
     });

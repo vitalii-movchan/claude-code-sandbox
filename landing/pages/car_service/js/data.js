@@ -70,9 +70,6 @@ window.SITE_DATA = {
     "Expensive Oil Changes Are Here to Stay",
     "What's Included in a Tuneup?",
     "Change Your Oil Every 3,000 Miles?",
-    "Expensive Oil Changes Are Here to Stay",
-    "What's Included in a Tuneup?",
-    "Change Your Oil Every 3,000 Miles?",
   ],
 
   /* Brands we service — short labels stand in for the logo row */

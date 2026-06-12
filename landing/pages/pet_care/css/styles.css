@@ -4,9 +4,9 @@
    ============================================= */
 
 :root {
+  /* Colors */
   --color-bg: #d6eef8;
   --color-bg-light: #e8f5fb;
-  --color-bg-section: #f5fbff;
   --color-accent: #6cc4e0;
   --color-accent-btn: #7ecde8;
   --color-accent-btn-hover: #5ab8d6;
@@ -16,9 +16,15 @@
   --color-star: #f5c518;
   --color-star-empty: #ccddee;
   --color-footer-bg: #b8dff0;
+
+  /* Typography */
   --font-main: 'Segoe UI', Arial, sans-serif;
+
+  /* Radius */
   --radius-card: 18px;
   --radius-btn: 30px;
+
+  /* Shadows */
   --shadow-card: 0 4px 20px rgba(100, 180, 220, 0.12);
 }
 
@@ -270,6 +276,7 @@ header, main, footer { position: relative; z-index: 1; }
   background: var(--color-white);
   border-radius: var(--radius-card);
   box-shadow: var(--shadow-card);
+  display: flex;
   flex-direction: column;
   align-items: center;
   padding: 24px 20px 20px;

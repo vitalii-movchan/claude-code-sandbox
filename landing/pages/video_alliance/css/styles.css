@@ -4,6 +4,7 @@
    ===================================================== */
 
 :root {
+  /* Colors */
   --color-accent: #f5c518;       /* жёлтый акцент */
   --color-accent-hover: #e0b010;
   --color-dark: #1f2a38;         /* тёмно-синий/графит */
@@ -13,9 +14,12 @@
   --color-bg: #ffffff;
   --color-bg-light: #f8f9fa;
   --color-border: #e0e0e0;
+
+  /* Typography */
   --font: 'Segoe UI', Arial, sans-serif;
+
+  /* Layout */
   --radius: 4px;
-  --shadow: 0 4px 20px rgba(0,0,0,0.10);
 }
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -204,9 +208,6 @@ ul { list-style: none; }
   align-items: start;
 }
 
-/* Левая колонка */
-.hero-left {}
-
 .hero-title {
   font-size: 36px;
   font-weight: 900;
@@ -304,6 +305,14 @@ ul { list-style: none; }
 .form-phone-input::placeholder { color: rgba(255,255,255,0.5); }
 .form-phone-input:focus { border-color: var(--color-accent); }
 
+/* Светлый вариант инпута (на светлом фоне секции control) */
+.form-phone-input--light {
+  background: var(--color-bg);
+  color: var(--color-text);
+  border-color: var(--color-border);
+}
+.form-phone-input--light::placeholder { color: var(--color-text-light); }
+
 .btn-primary {
   background: var(--color-accent);
   color: var(--color-dark);
@@ -325,7 +334,6 @@ ul { list-style: none; }
   position: relative;
   display: flex;
   flex-direction: column;
-  gap: 0;
 }
 
 .hero-image-block {
@@ -360,10 +368,12 @@ ul { list-style: none; }
 }
 
 #hero-badges-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
   margin-top: 0;
   display: flex;
   flex-direction: column;
-  gap: 0;
 }
 
 .hero-badge {
@@ -401,9 +411,6 @@ ul { list-style: none; }
   gap: 40px;
   align-items: start;
 }
-
-/* Левая колонка turnkey */
-.turnkey-left {}
 
 .turnkey-title {
   font-size: 32px;
@@ -446,9 +453,10 @@ ul { list-style: none; }
 }
 
 /* Центральная колонка — список услуг */
-.turnkey-center {}
-
 #services-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
   display: flex;
   flex-direction: column;
   gap: 3px;
@@ -457,7 +465,6 @@ ul { list-style: none; }
 .service-item {
   display: flex;
   align-items: center;
-  gap: 0;
   background: var(--color-bg-light);
   border: 1px solid var(--color-border);
   cursor: pointer;
@@ -503,8 +510,6 @@ ul { list-style: none; }
 }
 
 /* Правая колонка — карточка вопросов */
-.turnkey-right {}
-
 .question-card {
   background: var(--color-bg-light);
   border: 1px solid var(--color-border);
@@ -573,8 +578,6 @@ ul { list-style: none; }
   align-items: center;
 }
 
-.control-left {}
-
 .control-shield {
   width: 40px;
   height: 44px;
@@ -596,7 +599,6 @@ ul { list-style: none; }
 }
 
 .control-title em {
-  font-style: normal;
   color: var(--color-dark);
   font-style: italic;
 }
@@ -671,8 +673,6 @@ ul { list-style: none; }
   flex-shrink: 0;
 }
 
-.control-form-text {}
-
 .control-form-text h3 {
   font-size: 17px;
   font-weight: 700;
@@ -684,11 +684,6 @@ ul { list-style: none; }
   font-size: 12px;
   color: var(--color-text-light);
   margin-bottom: 12px;
-}
-
-.control-form {
-  display: flex;
-  gap: 10px;
 }
 
 .control-form-fields {
@@ -747,8 +742,6 @@ ul { list-style: none; }
   gap: 40px;
   align-items: start;
 }
-
-.projects-left {}
 
 .projects-title {
   font-size: 30px;
@@ -846,8 +839,6 @@ ul { list-style: none; }
 }
 
 /* Правая колонка проектов — кейс */
-.projects-right {}
-
 .case-label {
   font-size: 11px;
   text-transform: uppercase;
@@ -855,8 +846,6 @@ ul { list-style: none; }
   color: var(--color-text-light);
   margin-bottom: 12px;
 }
-
-#case-block {}
 
 .case-header {
   margin-bottom: 8px;
@@ -993,6 +982,9 @@ ul { list-style: none; }
 }
 
 .clients-track {
+  list-style: none;
+  margin: 0;
+  padding: 0;
   display: flex;
   gap: 20px;
   transition: transform 0.4s ease;
@@ -1077,7 +1069,6 @@ ul { list-style: none; }
     gap: 16px;
   }
   .control-form-avatar { display: none; }
-  .control-form { flex-direction: column; }
   .control-form-fields { flex-direction: column; }
 
   .dielectric-inner {
