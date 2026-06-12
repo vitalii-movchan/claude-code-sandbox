@@ -1,5 +1,5 @@
 ---
-name: landing-page
+name: landing-page-builder
 description: >-
   Генерирует одностраничный маркетинговый лендинг ПО КАРТИНКЕ-РЕФЕРЕНСУ:
   статический сайт на чистых HTML + CSS + vanilla JS без сборки и фреймворков,

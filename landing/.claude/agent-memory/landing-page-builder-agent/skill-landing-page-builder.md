@@ -1,11 +1,11 @@
 ---
-name: skill-landing-page
-description: Location and key instructions for the landing-page skill
+name: skill-landing-page-builder
+description: Location and key instructions for the landing-page-builder skill
 metadata:
   type: reference
 ---
 
-The landing-page skill lives at `.claude/skills/landing-page/`:
+The landing-page-builder skill lives at `.claude/skills/landing-page-builder/`:
 - `SKILL.md` — main skill instructions (read at start of every session)
 - `references/architecture.md` — technical data-driven pattern: escapeHtml, container→array→render, mobile menu boilerplate
 
