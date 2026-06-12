@@ -25,6 +25,27 @@ vanilla JS, воспроизводящие макет-референс. Ленд
 Через локальный HTTP-сервер, не из файловой системы:
 `python3 -m http.server 8000` из папки `pages/` → `http://localhost:8000/<папка>/`.
 
+## Деплой (Vercel через GitHub Actions)
+
+Лендинги создаются локально, деплоятся удалённо в GitHub Actions на Vercel. Корень сайта —
+`landing/pages/`, лендинги доступны как `/<папка>/` (напр. `/car_service/`); корневой
+`pages/index.html` — витрина со ссылками на все лендинги.
+
+Конфиги живут в **корне git-репо** (`~/www/claude-code/sandbox`), а не в `landing/` — Actions
+работают на уровне репозитория:
+
+- `.github/workflows/deploy-vercel.yml` — два джоба по событию: **production** (push в `main` +
+  ручной `workflow_dispatch`) и **preview** (каждый `pull_request`). Деплой через Vercel CLI с
+  авторизацией по токену. Preview-джоб постит/обновляет sticky-комментарий в PR с preview-URL
+  (маркер `<!-- vercel-preview -->`). `concurrency` по `github.ref` — PR-деплои не отменяют production.
+- `vercel.json` — статика без сборки (`buildCommand: null`), `outputDirectory: landing/pages`,
+  `cleanUrls` + `trailingSlash`.
+
+Секреты в репозитории: `VERCEL_TOKEN`, `VERCEL_ORG_ID`, `VERCEL_PROJECT_ID`.
+
+Прод публичен (`https://project-uz58t.vercel.app`). Preview-ссылки отдают **401** — на проекте
+включена Vercel Deployment Protection, preview виден только под логином Vercel; это by design.
+
 ## Скиллы и агенты
 
 Две пары «скилл + агент-обёртка», по ролям:
