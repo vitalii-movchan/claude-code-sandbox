@@ -21,7 +21,7 @@
 
     <!-- Логотип -->
     <a href="#" class="logo">
-      <div class="logo-shield">🛡</div>
+      <div class="logo-shield" aria-hidden="true">🛡</div>
       <div class="logo-text">
         <strong>Video</strong>
         <span>Alliance</span>
@@ -30,7 +30,7 @@
 
     <!-- Адрес -->
     <div class="header-address">
-      <div class="header-address-icon">📍</div>
+      <div class="header-address-icon" role="img" aria-label="Адрес">📍</div>
       <div class="header-address-text">
         <strong>г. Воронеж</strong>
         <small>ул. Ленина, 1, оф. 215</small>
@@ -77,8 +77,8 @@
         <h2 class="hero-form-title">Закажите звонок <span class="accent">нашего специалиста</span></h2>
         <p class="hero-form-subtitle">Мы свяжемся с вами в течение 15 минут, уточним детали и предложим варианты решений повышения эффективности вашего бизнеса</p>
         <div class="hero-form">
-          <div class="hero-form-avatar">👨‍💼</div>
-          <input class="form-phone-input" type="tel" name="phone_hero" id="phone_hero" placeholder="Ваш телефон">
+          <div class="hero-form-avatar" aria-hidden="true">👨‍💼</div>
+          <input class="form-phone-input" type="tel" name="phone_hero" id="phone_hero" placeholder="Ваш телефон" aria-label="Ваш телефон">
           <button class="btn-primary" type="submit">Заказать звонок специалиста</button>
         </div>
       </div>
@@ -89,13 +89,13 @@
       <!-- Фото камеры/здания (заглушка) -->
       <div class="hero-image-block">
         <div class="hero-camera-placeholder">
-          <span class="hero-camera-icon">📷</span>
+          <span class="hero-camera-icon" aria-hidden="true">📷</span>
         </div>
         <div class="hero-building-lines"></div>
       </div>
 
       <!-- Бейджи — наполняет main.js -->
-      <div id="hero-badges-list"></div>
+      <ul id="hero-badges-list"></ul>
     </div>
 
   </div>
@@ -122,13 +122,13 @@
     <!-- Центральная колонка — услуги -->
     <div class="turnkey-center">
       <!-- Список услуг — наполняет main.js -->
-      <div id="services-list"></div>
+      <ul id="services-list"></ul>
     </div>
 
     <!-- Правая колонка — карточка вопросов -->
     <div class="turnkey-right">
       <div class="question-card">
-        <div class="question-card-avatar">👨‍💼</div>
+        <div class="question-card-avatar" aria-hidden="true">👨‍💼</div>
         <h3>Остались вопросы?</h3>
         <p>Оставьте контактные данные и мы перезвоним вам в течение 5 минут!</p>
         <button class="btn-secondary">Заказать звонок</button>
@@ -144,7 +144,7 @@
 
     <!-- Левая колонка -->
     <div class="control-left">
-      <div class="control-shield">🛡</div>
+      <div class="control-shield" aria-hidden="true">🛡</div>
       <h2 class="control-title">
         Контролируйте свой бизнес <em>из любой<br>точки планеты</em><br>со спокойным сердцем
       </h2>
@@ -156,7 +156,7 @@
     <!-- Правая колонка — фото телефона -->
     <div class="control-right">
       <div class="phone-mockup">
-        <span class="phone-icon">📱</span>
+        <span class="phone-icon" aria-hidden="true">📱</span>
         <div class="phone-leaves"></div>
       </div>
     </div>
@@ -166,12 +166,12 @@
   <!-- Форма заказа звонка -->
   <div class="control-form-section">
     <div class="control-form-inner">
-      <div class="control-form-avatar">👨‍💼</div>
+      <div class="control-form-avatar" aria-hidden="true">👨‍💼</div>
       <div class="control-form-text">
         <h3>Закажите звонок <span>нашего специалиста</span></h3>
         <p>Мы свяжемся с вами в течение 15 минут, уточним детали и предложим варианты решений повышения эффективности вашего бизнеса</p>
         <div class="control-form-fields">
-          <input class="form-phone-input" type="tel" name="phone_control" id="phone_control" placeholder="Ваш телефон" style="background:#fff;color:#333;border-color:#ddd;">
+          <input class="form-phone-input form-phone-input--light" type="tel" name="phone_control" id="phone_control" placeholder="Ваш телефон" aria-label="Ваш телефон">
           <button class="btn-primary" type="submit">Заказать звонок специалиста</button>
         </div>
       </div>
@@ -181,7 +181,7 @@
   <!-- Блок про диэлектрические основания -->
   <div class="dielectric-section">
     <div class="dielectric-inner">
-      <div class="dielectric-icon">📡</div>
+      <div class="dielectric-icon" aria-hidden="true">📡</div>
       <div class="dielectric-text">
         <h3><strong>Все камеры монтируем</strong> на диэлектрические основания.</h3>
         <p>это продлевает срок службы камер и защищает их от блуждающих токов</p>
@@ -207,7 +207,7 @@
       <!-- Карточка бесплатного выезда -->
       <div class="specialist-card">
         <div class="specialist-card-top">
-          <div class="specialist-avatar">👨‍💼</div>
+          <div class="specialist-avatar" aria-hidden="true">👨‍💼</div>
           <h3>Закажите бесплатный выезд специалиста</h3>
         </div>
         <p>На обследование объекта и расчёт стоимости — наш специалист готов выехать к вам в удобное время</p>
@@ -224,7 +224,7 @@
 
       <!-- Фото кейса (заглушка) -->
       <div class="case-image">
-        🌾
+        <span aria-hidden="true">🌾</span>
         <div class="case-image-overlay"></div>
       </div>
     </div>
@@ -245,7 +245,7 @@
 
     <div class="clients-slider">
       <!-- Логотипы клиентов — наполняет main.js, clients-track является контейнером -->
-      <div class="clients-track" id="clients-list"></div>
+      <ul class="clients-track" id="clients-list"></ul>
     </div>
   </div>
 </section>

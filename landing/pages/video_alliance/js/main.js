@@ -12,61 +12,57 @@
 
   var data = window.SITE_DATA || {};
 
-  /* --- Hero: преимущества --- */
-  var heroAdvEl = document.getElementById("hero-advantages-list");
-  if (heroAdvEl && data.heroAdvantages) {
-    heroAdvEl.innerHTML = data.heroAdvantages.map(function (a) {
-      return '<li class="hero-adv-item">'
-        + '<span class="hero-adv-icon">' + escapeHtml(a.icon) + '</span>'
-        + '<div><strong>' + escapeHtml(a.title) + '</strong> — ' + escapeHtml(a.text) + '</div>'
+  /* Общий рендер списка преимуществ.
+     Секции hero/turnkey/projects используют одинаковую структуру <li>,
+     отличаясь только классами и разделителем title/text. */
+  function renderAdvantages(containerId, items, opts) {
+    var el = document.getElementById(containerId);
+    if (!el || !items) return;
+    el.innerHTML = items.map(function (a) {
+      return '<li class="' + opts.itemClass + '">'
+        + '<span class="' + opts.iconClass + '" aria-hidden="true">' + escapeHtml(a.icon) + '</span>'
+        + '<div><strong>' + escapeHtml(a.title) + '</strong>' + opts.separator + escapeHtml(a.text) + '</div>'
         + '</li>';
     }).join("");
   }
+
+  /* --- Hero: преимущества --- */
+  renderAdvantages("hero-advantages-list", data.heroAdvantages, {
+    itemClass: "hero-adv-item", iconClass: "hero-adv-icon", separator: " — "
+  });
 
   /* --- Hero: badges (оплата / рассрочка) --- */
   var heroBadgesEl = document.getElementById("hero-badges-list");
   if (heroBadgesEl && data.heroBadges) {
     heroBadgesEl.innerHTML = data.heroBadges.map(function (b) {
-      return '<div class="hero-badge">'
+      return '<li class="hero-badge">'
         + '<strong class="hero-badge-title">' + escapeHtml(b.title) + '</strong>'
         + '<p class="hero-badge-text">' + escapeHtml(b.text) + '</p>'
-        + '</div>';
+        + '</li>';
     }).join("");
   }
 
   /* --- Turnkey: преимущества --- */
-  var tkAdvEl = document.getElementById("turnkey-advantages-list");
-  if (tkAdvEl && data.turnkeyAdvantages) {
-    tkAdvEl.innerHTML = data.turnkeyAdvantages.map(function (a) {
-      return '<li class="tk-adv-item">'
-        + '<span class="tk-adv-icon">' + escapeHtml(a.icon) + '</span>'
-        + '<div><strong>' + escapeHtml(a.title) + '</strong> — ' + escapeHtml(a.text) + '</div>'
-        + '</li>';
-    }).join("");
-  }
+  renderAdvantages("turnkey-advantages-list", data.turnkeyAdvantages, {
+    itemClass: "tk-adv-item", iconClass: "tk-adv-icon", separator: " — "
+  });
 
   /* --- Turnkey: услуги --- */
   var servicesEl = document.getElementById("services-list");
   if (servicesEl && data.services) {
     servicesEl.innerHTML = data.services.map(function (s) {
-      return '<div class="service-item">'
-        + '<span class="service-emoji">' + escapeHtml(s.emoji) + '</span>'
+      return '<li class="service-item">'
+        + '<span class="service-emoji" aria-hidden="true">' + escapeHtml(s.emoji) + '</span>'
         + '<span class="service-title">' + escapeHtml(s.title) + '</span>'
         + '<span class="service-arrow">›</span>'
-        + '</div>';
-    }).join("");
-  }
-
-  /* --- Проекты: преимущества --- */
-  var projAdvEl = document.getElementById("project-advantages-list");
-  if (projAdvEl && data.projectAdvantages) {
-    projAdvEl.innerHTML = data.projectAdvantages.map(function (a) {
-      return '<li class="proj-adv-item">'
-        + '<span class="proj-adv-icon">' + escapeHtml(a.icon) + '</span>'
-        + '<div><strong>' + escapeHtml(a.title) + '</strong><br>' + escapeHtml(a.text) + '</div>'
         + '</li>';
     }).join("");
   }
+
+  /* --- Проекты: преимущества (разделитель — перенос строки) --- */
+  renderAdvantages("project-advantages-list", data.projectAdvantages, {
+    itemClass: "proj-adv-item", iconClass: "proj-adv-icon", separator: "<br>"
+  });
 
   /* --- Кейс --- */
   var caseEl = document.getElementById("case-block");
@@ -92,9 +88,9 @@
     /* Удвоим массив для бесшовного бегущего ряда */
     var doubled = data.clients.concat(data.clients);
     clientsEl.innerHTML = doubled.map(function (cl) {
-      return '<div class="client-logo">'
+      return '<li class="client-logo">'
         + '<span class="client-logo-text">' + escapeHtml(cl.name) + '</span>'
-        + '</div>';
+        + '</li>';
     }).join("");
   }
 
@@ -120,15 +116,19 @@
   var btnNext = document.querySelector(".clients-next");
   if (slider && btnPrev && btnNext) {
     var offset = 0;
-    var step = 180;
-    btnNext.addEventListener("click", function () {
-      offset -= step;
+    var step = 180; // ширина карточки (.client-logo 160px) + gap трека (.clients-track 20px)
+
+    function move(delta) {
+      /* Прокручиваемый диапазон = ширина трека минус видимая область.
+         Ограничиваем offset в [-(maxOffset), 0], чтобы нельзя было укрутить в бесконечность. */
+      var viewport = slider.parentElement ? slider.parentElement.clientWidth : 0;
+      var maxOffset = Math.max(0, slider.scrollWidth - viewport);
+      offset = Math.min(0, Math.max(-maxOffset, offset + delta));
       slider.style.transform = "translateX(" + offset + "px)";
-    });
-    btnPrev.addEventListener("click", function () {
-      offset += step;
-      slider.style.transform = "translateX(" + offset + "px)";
-    });
+    }
+
+    btnNext.addEventListener("click", function () { move(-step); });
+    btnPrev.addEventListener("click", function () { move(step); });
   }
 
 })();

@@ -89,13 +89,23 @@
     }
   }
 
+  /* Строит HTML точек карусели; active — индекс активной точки. */
+  function renderDots(total, active) {
+    if (!dotsEl) return;
+    dotsEl.innerHTML = Array.from({ length: total }, function (_, i) {
+      return '<button class="carousel-dot' + (i === active ? " carousel-dot--active" : "") + '" aria-label="Slide ' + (i + 1) + '" data-dot="' + i + '"></button>';
+    }).join("");
+  }
+
+  function dotsCount() {
+    return Math.ceil((data.services || []).length / cardsPerView);
+  }
+
   if (dotsEl && data.services) {
     cardsPerView = getCardsPerView();
-    var totalDots = Math.ceil(data.services.length / cardsPerView);
-    dotsEl.innerHTML = Array.from({ length: totalDots }, function (_, i) {
-      return '<button class="carousel-dot' + (i === 0 ? " carousel-dot--active" : "") + '" aria-label="Slide ' + (i + 1) + '" data-dot="' + i + '"></button>';
-    }).join("");
+    renderDots(dotsCount(), 0);
 
+    /* Делегирование: listener вешается ОДИН раз на контейнер. */
     dotsEl.addEventListener("click", function (e) {
       var btn = e.target.closest(".carousel-dot");
       if (btn) {
@@ -108,19 +118,8 @@
   updateCarousel();
   window.addEventListener("resize", function () {
     cardsPerView = getCardsPerView();
-    var newTotal = Math.ceil((data.services || []).length / cardsPerView);
-    if (dotsEl) {
-      dotsEl.innerHTML = Array.from({ length: newTotal }, function (_, i) {
-        return '<button class="carousel-dot' + (i === currentSlide ? " carousel-dot--active" : "") + '" aria-label="Slide ' + (i + 1) + '" data-dot="' + i + '"></button>';
-      }).join("");
-      dotsEl.addEventListener("click", function (e) {
-        var btn = e.target.closest(".carousel-dot");
-        if (btn) {
-          currentSlide = parseInt(btn.getAttribute("data-dot"), 10);
-          updateCarousel();
-        }
-      });
-    }
+    /* resize только пересоздаёт HTML точек — listener уже навешан выше. */
+    renderDots(dotsCount(), currentSlide);
     updateCarousel();
   });
 

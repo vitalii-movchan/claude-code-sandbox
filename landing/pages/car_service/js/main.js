@@ -19,42 +19,66 @@
     mail: '<svg viewBox="0 0 24 24" width="18" height="18"><path fill="currentColor" d="M20 4H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2zm0 4-8 5-8-5V6l8 5 8-5z"/></svg>',
   };
 
-  /* Feature columns */
-  render("features-list", data.features, (f) => `
+  /* Each section is a container id + its data array + an item template.
+     Looping keeps the seven near-identical render calls DRY. */
+  const SECTIONS = [
+    {
+      id: "features-list",
+      data: data.features,
+      tpl: (f) => `
     <article class="feature">
       <span class="feature-icon">${FEATURE_ICONS[f.icon] || ""}</span>
       <h3>${escapeHtml(f.title)}</h3>
       <p>${escapeHtml(f.text)}</p>
-    </article>`);
-
-  /* Services — flat list, CSS lays it out in columns */
-  render("services-list", data.services, (s) => `
-    <span class="service-item">${escapeHtml(s)}</span>`);
-
-  /* Reviews */
-  render("reviews-list", data.reviews, (r) => `
+    </article>`,
+    },
+    {
+      /* Services — flat list, CSS lays it out in columns */
+      id: "services-list",
+      data: data.services,
+      tpl: (s) => `
+    <li class="service-item">${escapeHtml(s)}</li>`,
+    },
+    {
+      id: "reviews-list",
+      data: data.reviews,
+      tpl: (r) => `
     <article class="review">
       <div class="review-photo" data-bg="${encodeURI(r.photo)}"></div>
       <h3>${escapeHtml(r.title)}</h3>
       <p class="review-text">${escapeHtml(r.text)}</p>
       <p class="review-author">${escapeHtml(r.author)}</p>
-    </article>`);
+    </article>`,
+    },
+    {
+      /* Why-choose checklist */
+      id: "why-list",
+      data: data.why,
+      tpl: (w) => `
+    <li><span class="check">&#10003;</span>${escapeHtml(w)}</li>`,
+    },
+    {
+      id: "brands-list",
+      data: data.brands,
+      tpl: (b) => `
+    <span class="brand">${escapeHtml(b)}</span>`,
+    },
+    {
+      id: "contacts-list",
+      data: data.contacts,
+      tpl: (c) => `
+    <li><span class="contact-icon">${CONTACT_ICONS[c.icon] || ""}</span>${escapeHtml(c.text)}</li>`,
+    },
+    {
+      /* Footer social */
+      id: "social-list",
+      data: data.social,
+      tpl: (s) => `
+    <a class="social-link" href="${encodeURI(s.href)}" aria-label="${escapeHtml(s.label)}">${escapeHtml(s.glyph)}</a>`,
+    },
+  ];
 
-  /* Why-choose checklist */
-  render("why-list", data.why, (w) => `
-    <li><span class="check">&#10003;</span>${escapeHtml(w)}</li>`);
-
-  /* Brands */
-  render("brands-list", data.brands, (b) => `
-    <span class="brand">${escapeHtml(b)}</span>`);
-
-  /* Contacts */
-  render("contacts-list", data.contacts, (c) => `
-    <li><span class="contact-icon">${CONTACT_ICONS[c.icon] || ""}</span>${escapeHtml(c.text)}</li>`);
-
-  /* Footer social */
-  render("social-list", data.social, (s) => `
-    <a class="social-link" href="${encodeURI(s.href)}" aria-label="${escapeHtml(s.label)}">${escapeHtml(s.glyph)}</a>`);
+  SECTIONS.forEach((section) => render(section.id, section.data, section.tpl));
 
   /* Generic: container id → array → innerHTML */
   function render(id, arr, tpl) {
@@ -73,8 +97,11 @@
       if (!url) return;
       const probe = new Image();
       probe.onload = () => {
-        el.style.backgroundImage = "url('" + url + "')";
+        el.style.backgroundImage = 'url("' + url + '")';
         el.classList.add("has-img");
+      };
+      probe.onerror = () => {
+        console.warn("Background image failed to load:", url);
       };
       probe.src = url;
     });
@@ -91,6 +118,14 @@
     });
     nav.addEventListener("click", (e) => {
       if (e.target.tagName === "A") {
+        nav.classList.remove("open");
+        toggle.setAttribute("aria-expanded", "false");
+      }
+    });
+    /* Close the mobile menu when resizing up to desktop width
+       (mobile nav lives under @media (max-width: 860px) in styles.css). */
+    window.addEventListener("resize", () => {
+      if (window.innerWidth > 860 && nav.classList.contains("open")) {
         nav.classList.remove("open");
         toggle.setAttribute("aria-expanded", "false");
       }
