@@ -111,6 +111,13 @@ window.SITE_DATA = {
 Сам каркас секций — по референсу. Из технического обязательно лишь:
 
 ```html
+<!-- В <head>: inline-SVG favicon в data:-URI (без файла и сетевого запроса).
+     Цвет — акцент с референса, знак — из логотипа. # в URL экранируется как %23,
+     % как %25. См. «Favicon» ниже. -->
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='6' fill='%23f15a24'/><text x='50%25' y='53%25' font-family='sans-serif' font-size='17' font-weight='700' fill='%23fff' text-anchor='middle' dominant-baseline='central'>CS</text></svg>">
+```
+
+```html
 <!-- ... верстка секций по дизайну референса ... -->
 
 <!-- Контейнеры списков — пустые, наполняет main.js. Тег по смыслу: список → <ul> -->
@@ -121,6 +128,23 @@ window.SITE_DATA = {
 <script src="js/data.js" defer></script>
 <script src="js/main.js" defer></script>
 ```
+
+### Favicon — знак из логотипа на акцентном фоне
+
+Значок строится из того, что уже есть в лендинге: **фон** — акцентный цвет
+(`--color-accent`), **знак** — из логотипа. Два варианта знака:
+
+- **Монограмма** — 1–2 буквы из названия (`CAR SERVICES` → `CS`). Через `<text>`,
+  как в образце выше.
+- **Эмодзи-иконка** — если логотип в референсе это эмодзи (`🐾 Pawsome`), ставь
+  её вместо `<text>` и убери `<rect>`-фон (эмодзи самодостаточно):
+  ```html
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><text x='50%25' y='53%25' font-size='26' text-anchor='middle' dominant-baseline='central'>🐾</text></svg>">
+  ```
+
+Экранирование в `data:`-URI обязательно, иначе значок не отрисуется: `#` → `%23`,
+`%` → `%25`. Кавычки в SVG — одинарные (двойные закрывают `href`). Размеры/радиус/
+вес — под вид конкретного лендинга; навязанного дизайна значка нет.
 
 ## css/styles.css — только про токены
 
