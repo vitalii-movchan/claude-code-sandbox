@@ -30,6 +30,9 @@
         el.style.backgroundImage = "url('" + encodeURI(url) + "')";
         el.classList.add("has-img");
       };
+      probe.onerror = function () {
+        console.warn("Background image failed to load:", url);
+      };
       probe.src = encodeURI(url);
     });
   })();
