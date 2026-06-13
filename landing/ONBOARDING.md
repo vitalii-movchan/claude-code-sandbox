@@ -52,3 +52,7 @@ cd pages && python3 -m http.server 8000
 → production, каждый PR → preview-деплой со sticky-комментарием. Конфиги
 (`deploy-vercel.yml`, `vercel.json`) живут в корне git-репо. Подробности и
 секреты — в `CLAUDE.md`.
+
+Прод (публичный): <https://project-uz58t.vercel.app> — витрина со ссылками на
+все лендинги. Preview-ссылки из PR отдают 401 (Vercel Deployment Protection,
+by design).
