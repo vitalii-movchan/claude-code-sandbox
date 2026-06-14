@@ -46,19 +46,19 @@ window.SITE_DATA = {
   /* Customer reviews */
   reviews: [
     {
-      photo: "img/review-1.jpg",
+      photo: "https://84ewtone0xxz0ogv.public.blob.vercel-storage.com/landings/car_service/review-1.jpg",
       title: "BMW Door Lock Replacement",
       text: "It ended up costing about half of what it would have cost otherwise. And then when it came time to buy another car, the mechanic came out twice to check our cars and give me a full report over the phone. Really affordable. And it really worked out well for us. We did not have to make time to take our car somewhere and drop it off to be repaired.",
       author: "Yaniv",
     },
     {
-      photo: "img/review-2.jpg",
+      photo: "https://84ewtone0xxz0ogv.public.blob.vercel-storage.com/landings/car_service/review-2.jpg",
       title: "Jaguar Thermostat Replacement",
       text: "I really like Whitney because he really took a personal interest in the car and explained to me everything he was going to do with the car and what problems I might have with something that I hadn't even noticed like the headlights. Nobody's done that for me before and I've had this car for 12 years. Whitney's the best mechanic I've ever seen.",
       author: "Nola",
     },
     {
-      photo: "img/review-3.jpg",
+      photo: "https://84ewtone0xxz0ogv.public.blob.vercel-storage.com/landings/car_service/review-3.jpg",
       title: "Lexus Radiator Replacement",
       text: "Gary who services the cars here for North Marin County was sent out within two days of my request, and it has been very convenient. I didn't have to go find him — he came and found me (and) took care of it right at my home. He cleaned up everything. The car is already put together and that's great.",
       author: "Mike",
