@@ -9,9 +9,9 @@ description: >-
   для секции». Источник выбирается из source-list: пока unsplash (Unsplash API,
   unsplash-source). Все источники реализуют один контракт (action-list), но
   каждый — по-своему. Скилл получает картинку и кладёт её на диск (img/); дальше
-  залить её в хранилище — это landing-image-manager (upload→vercel), а привязку
+  залить её в хранилище — это landing-image-storage (upload→vercel), а привязку
   к слотам лендинга (SITE_DATA) скилл НЕ делает. Получение ≠ хранение: сюда за
-  «откуда взять», в landing-image-manager — за «куда положить».
+  «откуда взять», в landing-image-storage — за «куда положить».
 ---
 
 # Источник изображений лендинга
@@ -19,16 +19,16 @@ description: >-
 Источник решает *откуда брать*, действие — *что сделать* (найти / скачать).
 `<landing>` — аргумент всех действий (см. корневой `CLAUDE.md`).
 
-Перпендикулярен `landing-image-manager`: тот про **хранение** (куда положить
+Перпендикулярен `landing-image-storage`: тот про **хранение** (куда положить
 уже имеющуюся картинку), этот про **получение** (откуда взять новую). Граница:
 `landing-image-source` кладёт файл в `pages/<landing>/img/` → дальше его можно
-залить профилем `upload→vercel` из `landing-image-manager`. Целостный пайплайн:
+залить через `upload→vercel` из `landing-image-storage`. Целостный пайплайн:
 **source → fetch → (img/) → upload**.
 
 ## Модель: action-list × source-list
 
 Два списка в двух папках, перпендикулярные друг другу (зеркало
-`landing-image-manager`):
+`landing-image-storage`):
 
 - **`actions/`** — **action-list**, общий контракт (интерфейс), по файлу на действие:
   - `search-action` — найти кандидатов по текстовому запросу (вернуть список);
@@ -83,6 +83,6 @@ sources/unsplash-source.md   →  ## search-action / ## fetch-action
 ## Границы
 
 Только получение изображений из источников: **не** хранит (это
-`landing-image-manager`, профиль `upload`) и **не** привязывает к слотам
+`landing-image-storage`, действие `upload`) и **не** привязывает к слотам
 (`SITE_DATA`). Операции адресуют один `<landing>`; соседние не трогаем.
 Соблюдай лицензии и атрибуцию источника (для Unsplash — кредит автору).

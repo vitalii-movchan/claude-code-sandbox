@@ -1,4 +1,4 @@
-# vercel-profile — Vercel Blob
+# vercel-storage — Vercel Blob
 
 Реализация `action-list` поверх [Vercel Blob](https://vercel.com/docs/vercel-blob)
 через REST API (без пакета `@vercel/blob`). Локатор = публичный URL блоба;

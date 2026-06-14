@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# download-action / local-profile — достаёт копию из pages/<landing>/img/.
+# download-action / local-storage — достаёт копию из pages/<landing>/img/.
 # Usage: download.sh <landing> <locator> [dest]
 set -euo pipefail
 
