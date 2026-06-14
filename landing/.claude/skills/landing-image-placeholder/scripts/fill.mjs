@@ -66,9 +66,14 @@ function parseTable(text) {
   for (const raw of text.split("\n")) {
     const line = raw.trim();
     if (!line.startsWith("|")) continue;
-    const cells = line.split("|").slice(1, -1).map((c) => c.trim());
-    if (cells.length < 2) continue;
-    const [slot, url] = cells;
+    // Ровно две ячейки `| <slot> | <url> |`: режем по первым двум разделителям,
+    // остаток (до завершающего `|`) — это url целиком, чтобы `|` внутри URL
+    // (напр. query-параметр) не обрезался.
+    const inner = line.replace(/^\|/, "").replace(/\|\s*$/, "");
+    const sep = inner.indexOf("|");
+    if (sep === -1) continue;
+    const slot = inner.slice(0, sep).trim();
+    const url = inner.slice(sep + 1).trim();
     if (!slot || slot.startsWith("---")) continue;
     if (slot.toLowerCase().startsWith("mock")) continue; // шапка
     if (slot.startsWith("_(")) continue; // «слотов нет»
