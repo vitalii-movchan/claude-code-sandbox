@@ -1,0 +1,23 @@
+[
+  {"query": "у меня в pet_care везде эти серые заглушки вместо фоток, замени их на нормальные изображения", "should_trigger": true},
+  {"query": "добавь реальные картинки в move_service, а то там пустые плейсхолдеры в секции услуг и команды", "should_trigger": true},
+  {"query": "car_service выглядит голым — в отзывах нет фоток клиентов, поставь туда живые снимки", "should_trigger": true},
+  {"query": "у меня есть папка ~/Downloads/team-photos с фотками сотрудников, разложи их по слотам команды в лендинге move_service", "should_trigger": true},
+  {"query": "залей картинки лендинга на vercel blob чтобы не тащить бинарники в гит, и пропиши урлы в data.js", "should_trigger": true},
+  {"query": "надо отрендерить pet_care с настоящими фото вместо emoji-заглушек, возьми что-нибудь тематическое из стока", "should_trigger": true},
+  {"query": "в data.js лендинга пути типа img/review-1.jpg ведут в никуда, подставь туда реальные изображения по смыслу", "should_trigger": true},
+  {"query": "наполни мой лендинг про автосервис фотографиями — сейчас там одни градиентные плейсхолдеры", "should_trigger": true},
+  {"query": "хочу заменить демо-изображения в move_service на стоковые фото грузовиков и переезда", "should_trigger": true},
+  {"query": "у меня готовые jpg в /tmp/pics, нужно вставить их в лендинг pet_care на места hero, vets и footer", "should_trigger": true},
+
+  {"query": "сделай мне новый лендинг для кофейни по этому скриншоту макета, который я приложил", "should_trigger": false},
+  {"query": "отрефактори car_service — там куча мёртвого css и дублирование в main.js, почисти код", "should_trigger": false},
+  {"query": "проведи аудит move_service перед деплоем, какие там дефекты, ничего не меняй", "should_trigger": false},
+  {"query": "открой pet_care в браузере и сними скриншот десктоп и мобильный, хочу глянуть как сейчас выглядит", "should_trigger": false},
+  {"query": "перепиши заголовок и подзаголовок в hero-секции car_service, текущий текст слабый и не продаёт", "should_trigger": false},
+  {"query": "почему у меня в консоли 404 на favicon.ico когда я открываю лендинг локально", "should_trigger": false},
+  {"query": "поменяй акцентный цвет в pet_care с голубого на зелёный, поправь --color-accent в styles.css", "should_trigger": false},
+  {"query": "сожми и оптимизируй вот эти png в папке assets, они весят по 4 мегабайта каждый", "should_trigger": false},
+  {"query": "сгенерируй мне через image-модель логотип для автосервиса в векторе", "should_trigger": false},
+  {"query": "добавь новую секцию с ценами в лендинг move_service между услугами и командой", "should_trigger": false}
+]
