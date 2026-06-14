@@ -44,9 +44,16 @@ if (!img.ok) {
   process.exit(1);
 }
 
-// dest: файл или существующая папка; по умолчанию — pages/<landing>/img/<id>.jpg
-const stem = id ?? (basename(new URL(imageUrl).pathname) || 'image');
-const defaultName = `${stem}.jpg`;
+// расширение — из Content-Type ответа (Unsplash отдаёт jpg, но ref-URL может быть
+// png/webp/avif); фоллбэк — расширение из URL, иначе jpg.
+const CT_EXT = { 'image/jpeg': 'jpg', 'image/png': 'png', 'image/webp': 'webp', 'image/avif': 'avif', 'image/gif': 'gif' };
+const ct = (img.headers.get('content-type') || '').split(';')[0].trim().toLowerCase();
+const urlExt = (basename(new URL(imageUrl).pathname).match(/\.([a-z0-9]+)$/i)?.[1] || '').toLowerCase();
+const ext = CT_EXT[ct] || urlExt || 'jpg';
+
+// dest: файл или существующая папка; по умолчанию — pages/<landing>/img/<stem>.<ext>
+const stem = id ?? (basename(new URL(imageUrl).pathname).replace(/\.[a-z0-9]+$/i, '') || 'image');
+const defaultName = `${stem}.${ext}`;
 let out = dest || join('pages', landing, 'img', defaultName);
 try {
   if ((await stat(out)).isDirectory()) out = join(out, defaultName);
