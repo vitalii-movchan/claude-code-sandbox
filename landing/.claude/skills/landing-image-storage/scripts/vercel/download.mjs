@@ -1,8 +1,8 @@
 #!/usr/bin/env node
 // download-action / vercel-storage — GET блоба по URL на диск.
 // Usage: node download.mjs <landing> <url> [dest]
-import { writeFile, stat } from 'node:fs/promises';
-import { basename, join } from 'node:path';
+import { writeFile, stat, mkdir } from 'node:fs/promises';
+import { basename, join, dirname } from 'node:path';
 
 const [, , landing, url, dest] = process.argv;
 if (!landing || !url) {
@@ -20,11 +20,13 @@ if (!res.ok) {
   process.exit(1);
 }
 
-// dest: файл или существующая папка; по умолчанию — имя из URL в текущей папке.
-let out = dest || basename(new URL(url).pathname);
+// dest: файл или существующая папка; по умолчанию — pages/<landing>/img/<имя из URL>.
+const fileName = basename(new URL(url).pathname);
+let out = dest || join('pages', landing, 'img', fileName);
 try {
-  if ((await stat(out)).isDirectory()) out = join(out, basename(new URL(url).pathname));
+  if ((await stat(out)).isDirectory()) out = join(out, fileName);
 } catch { /* dest не существует — трактуем как путь к файлу */ }
 
+await mkdir(dirname(out), { recursive: true });
 await writeFile(out, Buffer.from(await res.arrayBuffer()));
 console.log(out);
