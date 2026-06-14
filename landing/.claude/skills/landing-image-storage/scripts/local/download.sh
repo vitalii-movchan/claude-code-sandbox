@@ -5,9 +5,8 @@ set -euo pipefail
 
 landing="${1:?usage: download.sh <landing> <locator> [dest]}"
 locator="${2:?usage: download.sh <landing> <locator> [dest]}"
-dest="${3:-.}"
-
 dir="pages/$landing/img"
+dest="${3:-$dir}"
 # locator: имя в img/ или уже полный путь.
 if [ -f "$locator" ]; then
   src="$locator"
@@ -18,10 +17,18 @@ else
   exit 1
 fi
 
-if [ -d "$dest" ]; then
+# дефолт ($dir) и явный путь-с-/ трактуем как папку; иначе — путь к файлу.
+if [ -d "$dest" ] || [ "$dest" = "$dir" ] || [ "${dest: -1}" = "/" ]; then
+  mkdir -p "$dest"
   out="$dest/$(basename "$src")"
 else
   out="$dest"
+fi
+
+# src уже лежит по целевому пути (download своей же картинки в её место) — no-op.
+if [ "$src" -ef "$out" ]; then
+  echo "$out"
+  exit 0
 fi
 
 cp "$src" "$out"
