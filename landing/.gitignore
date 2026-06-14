@@ -2,3 +2,6 @@
 # фикстуры (копии лендингов), прогоны evals, grading, HTML-вьюеры, benchmark.
 # Это рабочий мусор итераций skill-creator, а не часть проекта.
 .claude/skills/*-workspace/
+.env.*
+.vercel
+.env*
