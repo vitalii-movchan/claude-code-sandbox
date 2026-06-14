@@ -53,6 +53,8 @@ node scripts/unsplash/fetch.mjs <landing> <ref> [dest]
 ```
 
 - `<ref>` — `id` фото или прямой URL (из `search`).
-- `[dest]` — путь сохранения (по умолчанию — `pages/<landing>/img/<id>.jpg`).
-- **stdout:** путь к сохранённому файлу (вход для `upload` из `landing-image-storage`).
+- `[dest]` — путь сохранения (по умолчанию — `pages/<landing>/img/<id>.<ext>`,
+  где `<ext>` — по Content-Type ответа: обычно `jpg`, но `png`/`webp`/`avif`,
+  если сток отдал такой формат).
+- **stdout:** путь к сохранённому файлу.
 - Печатает в stderr строку атрибуции автора — для кредита по лицензии Unsplash.
