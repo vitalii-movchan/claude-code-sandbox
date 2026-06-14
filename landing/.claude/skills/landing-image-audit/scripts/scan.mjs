@@ -21,8 +21,10 @@ import { fileURLToPath } from "node:url";
 import { dirname, join, resolve } from "node:path";
 
 const PLACEHOLDER = "← вписать";
-// Значение-картинка: путь img/…, расширение картинки или http(s)-URL.
-const IMAGE_RE = /(^https?:\/\/)|(\.(jpe?g|png|webp|svg|gif|avif)(\?.*)?$)|(^img\/)/i;
+// Значение-картинка: путь img/… или расширение картинки (в т.ч. http(s)-URL
+// с расширением). Голый http-URL без расширения картинкой НЕ считается —
+// иначе соц-ссылки / CTA / сайты ловятся как ложные слоты.
+const IMAGE_RE = /(\.(jpe?g|png|webp|svg|gif|avif)(\?.*)?$)|(^img\/)/i;
 
 function parseArgs(argv) {
   const args = { landing: null, pages: null };
