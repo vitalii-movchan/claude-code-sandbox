@@ -77,16 +77,16 @@ vanilla JS, воспроизводящие макет-референс. Ленд
   консоль → стоп. На него опираются builder и refactor для шага верификации, audit — для живой
   картины (консоль ловит рантайм-дефекты); сам по себе годится для ручного «покажи лендинг в
   браузере». Агента-обёртки у него нет — это техническая процедура, не роль.
-- **Изображения (хранение).** Скилл **`landing-image-manager`** грузит / качает / находит картинки
+- **Изображения (хранение).** Скилл **`landing-image-storage`** грузит / качает / находит картинки
   лендинга. Две перпендикулярные оси: **action-list** (`actions/` — интерфейс из трёх действий
-  `upload` / `download` / `locate`) и **profile-list** (`profiles/` — реализации хранилища:
-  `vercel-profile` через Vercel Blob, `local-profile` через файловую систему). Пара `(action, profile)`
-  адресует секцию в файле профиля, исполнение — скрипты `scripts/<profile>/`. К слотам `SITE_DATA` не
+  `upload` / `download` / `locate`) и **storage-list** (`storages/` — реализации хранилища:
+  `vercel-storage` через Vercel Blob, `local-storage` через файловую систему). Пара `(action, storage)`
+  адресует секцию в файле хранилища, исполнение — скрипты `scripts/<storage>/`. К слотам `SITE_DATA` не
   привязывает. Агента-обёртки нет — техническая процедура, не роль.
 - **Изображения (получение).** Скилл **`landing-image-source`** достаёт картинки из стоков — *откуда
-  взять*, перпендикулярно *куда положить* у `landing-image-manager`. Те же две оси: **action-list**
+  взять*, перпендикулярно *куда положить* у `landing-image-storage`. Те же две оси: **action-list**
   (`actions/` — `search` найти кандидатов / `fetch` скачать в `pages/<landing>/img/`) и **source-list**
   (`sources/` — реализации источников: пока `unsplash-source` через Unsplash API). Пара `(action, source)`
   адресует секцию в файле источника, исполнение — скрипты `scripts/<source>/`. Целостный пайплайн —
-  `source → fetch → img/ → upload` (заливка уже у `landing-image-manager`). К `SITE_DATA` не привязывает.
+  `source → fetch → img/ → upload` (заливка уже у `landing-image-storage`). К `SITE_DATA` не привязывает.
   Агента-обёртки нет — техническая процедура, не роль.

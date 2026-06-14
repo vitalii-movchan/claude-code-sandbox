@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// download-action / vercel-profile — GET блоба по URL на диск.
+// download-action / vercel-storage — GET блоба по URL на диск.
 // Usage: node download.mjs <landing> <url> [dest]
 import { writeFile, stat } from 'node:fs/promises';
 import { basename, join } from 'node:path';

@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// upload-action / vercel-profile — PUT файла в Vercel Blob через REST API.
+// upload-action / vercel-storage — PUT файла в Vercel Blob через REST API.
 // Usage: node upload.mjs <landing> <source> [name]
 import { readFile } from 'node:fs/promises';
 import { basename } from 'node:path';

@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# upload-action / local-profile — копирует изображение в pages/<landing>/img/.
+# upload-action / local-storage — копирует изображение в pages/<landing>/img/.
 # Usage: upload.sh <landing> <source> [name]
 set -euo pipefail
 

@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# locate-action / local-profile — ссылка на изображение или список.
+# locate-action / local-storage — ссылка на изображение или список.
 # Usage: locate.sh <landing> [name]
 set -euo pipefail
 

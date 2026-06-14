@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// locate-action / vercel-profile — URL блоба или список под префиксом лендинга.
+// locate-action / vercel-storage — URL блоба или список под префиксом лендинга.
 // Usage: node locate.mjs <landing> [name]
 const API = 'https://vercel.com/api/blob';
 const API_VERSION = '12';
