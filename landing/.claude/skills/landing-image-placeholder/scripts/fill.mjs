@@ -32,7 +32,8 @@ import { dirname, join, resolve } from "node:path";
 
 const PLACEHOLDER = "← вписать";
 // Значение-картинка — тот же критерий, что в landing-image-audit/scripts/scan.mjs.
-const IMAGE_RE = /(^https?:\/\/)|(\.(jpe?g|png|webp|svg|gif|avif)(\?.*)?$)|(^img\/)/i;
+// Голый http-URL без расширения картинкой НЕ считается (соц-ссылки / CTA / сайты).
+const IMAGE_RE = /(\.(jpe?g|png|webp|svg|gif|avif)(\?.*)?$)|(^img\/)/i;
 
 function parseArgs(argv) {
   const args = { landing: null, table: null, pages: null, dryRun: false };
